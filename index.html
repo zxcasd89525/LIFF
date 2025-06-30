@@ -27,7 +27,7 @@
                     try {
                         // 【關鍵修正】我們不再檢查 isApiAvailable，而是直接執行！
                         console.log("準備呼叫 liff.shareTargetPicker()...");
-                        
+                        const LIFF_URL = 'https://liff.line.me/2007667168-qk6mywm6';
                         const messageToSend = [{
                             "type": "flex",
                             "altText": "這是一張電子名片",
@@ -35,7 +35,16 @@
                                 "type": "bubble",
                                 "hero": { "type": "image", "url": "https://i.imgur.com/rS0FfWq.png", "size": "full", "aspectRatio": "1:1", "aspectMode": "cover" },
                                 "body": { "type": "box", "layout": "vertical", "spacing": "md", "contents": [ { "type": "text", "text": "您的名字", "weight": "bold", "size": "xl" }, { "type": "text", "text": "您的職稱 | XXX 公司", "color": "#aaaaaa", "size": "sm" } ] },
-                                "footer": { "type": "box", "layout": "vertical", "spacing": "sm", "contents": [ { "type": "button", "style": "link", "action": { "type": "uri", "label": "前往官方網站", "uri": "https://www.google.com" } } ] }
+                                "footer": { "type": "box", "layout": "vertical", "spacing": "sm", "contents": [ {
+              type: 'button',
+              style: 'primary',
+              color: '#1DB446',
+              action: {
+                type: 'uri',
+                label: '轉傳分享 Share',
+                uri: LIFF_URL, // 按鈕指向我們的 LIFF App
+              },
+            },{ "type": "button", "style": "link", "action": { "type": "uri", "label": "前往官方網站", "uri": "https://www.google.com" } } ] }
                             }
                         }];
                         
