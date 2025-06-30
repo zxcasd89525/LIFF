@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>分享名片</title>
-    <!-- 關鍵變動：將 LIFF SDK 的載入移到這裡 -->
     <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
     <style>
         body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; background-color: #f0f0f0; }
@@ -14,55 +13,51 @@
 </head>
 <body>
     <div class="container">
-        <h1>柏允幫你分享名片</h1>
+        <h1>柏允幫你分享</h1>
         <button id="shareButton">➤ 分享名片給好友</button>
     </div>
 
-    <!-- 我們自己寫的邏輯腳本，保留在 body 的結尾 -->
     <script>
-    // 先定義好我們的主程式
-    async function main() {
-        console.log("DOM 已準備就緒，現在開始執行 LIFF 腳本。");
-        try {
-            await liff.init({ liffId: "2007667168-qk6mywm6" });
-            console.log("liff.init() 成功完成！");
-
-            const shareButton = document.getElementById('shareButton');
-            shareButton.addEventListener('click', async () => {
-                console.log("分享按鈕被點擊。");
-                if (!liff.isApiAvailable('shareTargetPicker')) {
-                    alert('此分享功能僅限在 LINE App 中使用。');
-                    return;
-                }
+        async function main() {
+            try {
+                await liff.init({ liffId: "2007667168-qk6mywm6" });
                 
-                // --- 這裡是修正的地方 ---
-                const messageToSend = [{
-                    "type": "flex",
-                    "altText": "這是一張電子名片",
-                    "contents": {
-                      "type": "bubble",
-                      "hero": { "type": "image", "url": "https://i.imgur.com/rS0FfWq.png", "size": "full", "aspectRatio": "1:1", "aspectMode": "cover" },
-                      "body": { "type": "box", "layout": "vertical", "spacing": "md", "contents": [ { "type": "text", "text": "您的名字", "weight": "bold", "size": "xl" }, { "type": "text", "text": "您的職稱 | XXX 公司", "color": "#aaaaaa", "size": "sm" } ] },
-                      "footer": { "type": "box", "layout": "vertical", "spacing": "sm", "contents": [ { "type": "button", "style": "link", "action": { "type": "uri", "label": "前往官方網站", "uri": "https://www.google.com" } } ] }
+                const shareButton = document.getElementById('shareButton');
+                shareButton.addEventListener('click', async () => {
+                    try {
+                        // 【關鍵修正】我們不再檢查 isApiAvailable，而是直接執行！
+                        console.log("準備呼叫 liff.shareTargetPicker()...");
+                        
+                        const messageToSend = [{
+                            "type": "flex",
+                            "altText": "這是一張電子名片",
+                            "contents": {
+                                "type": "bubble",
+                                "hero": { "type": "image", "url": "https://i.imgur.com/rS0FfWq.png", "size": "full", "aspectRatio": "1:1", "aspectMode": "cover" },
+                                "body": { "type": "box", "layout": "vertical", "spacing": "md", "contents": [ { "type": "text", "text": "您的名字", "weight": "bold", "size": "xl" }, { "type": "text", "text": "您的職稱 | XXX 公司", "color": "#aaaaaa", "size": "sm" } ] },
+                                "footer": { "type": "box", "layout": "vertical", "spacing": "sm", "contents": [ { "type": "button", "style": "link", "action": { "type": "uri", "label": "前往官方網站", "uri": "https://www.google.com" } } ] }
+                            }
+                        }];
+                        
+                        const result = await liff.shareTargetPicker(messageToSend);
+                        if (result) {
+                            liff.closeWindow();
+                        } else {
+                            console.log("使用者取消了分享。");
+                        }
+                    } catch (error) {
+                        // 如果在真的無法分享的環境中，錯誤會在這裡被捕捉
+                        console.error("分享時發生錯誤:", error);
+                        alert("分享失敗，可能是您的裝置或瀏覽器不支援此操作。");
                     }
-                }]; // <-- 【關鍵修正】補上了遺失的 `]` 和 `;`
-                // -------------------------
-                
-                const result = await liff.shareTargetPicker(messageToSend);
-                if (result) {
-                    liff.closeWindow();
-                }
-            });
-            console.log("分享按鈕的事件已綁定。");
+                });
 
-        } catch (error) {
-            console.error("LIFF 初始化過程中發生嚴重錯誤:", error);
-            alert("LIFF 初始化失敗，請檢查主控台。");
+            } catch (error) {
+                console.error("LIFF 初始化失敗:", error);
+            }
         }
-    }
 
-    // 使用 addEventListener 確保 DOM 載入後才執行
-    document.addEventListener('DOMContentLoaded', main);
-</script>
+        document.addEventListener('DOMContentLoaded', main);
+    </script>
 </body>
 </html>
