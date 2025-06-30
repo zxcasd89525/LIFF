@@ -1,69 +1,65 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>分享名片</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>分享名片</title>
+    <style>
+        body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; background-color: #f0f0f0; }
+        .container { text-align: center; }
+        button { background-color: #00B900; color: white; border: none; padding: 15px 30px; border-radius: 8px; font-size: 18px; cursor: pointer; }
+    </style>
 </head>
 <body>
-  <h1>分享我的名片</h1>
-  <button id="shareButton">分享給好友</button>
+    <div class="container">
+        <h1>i傳卡服務</h1>
+        <button id="shareButton">➤ 分享 i 傳卡給好友</button>
+    </div>
 
-  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
-  <script>
-    async function main() {
-      // 初始化 LIFF
-      await liff.init({ liffId: "你的LIFF_ID" }); // 把 LIFF ID 換成你自己的
+    <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+    <script>
+        async function main() {
+            // --- 重要：請準備好，稍後會從 LINE Developers Console 填入 ---
+            await liff.init({ liffId: "YOUR_LIFF_ID" });
+            // -------------------------------------------------------------
 
-      if (!liff.isLoggedIn()) {
-        // 如果使用者沒登入，可以選擇導向登入頁面
-        liff.login();
-        return;
-      }
-
-      // 監聽分享按鈕的點擊事件
-      const shareButton = document.getElementById('shareButton');
-      shareButton.addEventListener('click', async () => {
-        try {
-          // 檢查是否支援 Share Target Picker
-          if (!liff.isApiAvailable('shareTargetPicker')) {
-            alert('您的 LINE 版本不支援此分享功能。');
-            return;
-          }
-          
-          // 呼叫分享功能
-          const result = await liff.shareTargetPicker([
-            // 在這裡放入你想要分享的 Flex Message JSON 物件
-            {
-              "type": "flex",
-              "altText": "這是一張電子名片",
-              "contents": {
-                // 這裡貼上跟步驟二完全一樣的 Bubble 或 Carousel JSON 結構
-                "type": "bubble",
-                "body": {
-                  "type": "box",
-                  "layout": "vertical",
-                  "contents": [
-                    { "type": "text", "text": "這是被分享出去的名片！", "weight": "bold" }
-                  ]
-                }
-              }
+            if (!liff.isLoggedIn()) {
+                liff.login();
+                return;
             }
-          ]);
 
-          if (result) {
-            // 分享成功後，可以選擇關閉 LIFF 視窗
-            liff.closeWindow();
-          }
-
-        } catch (error) {
-          console.error(error);
-          alert('分享失敗，請稍後再試。');
+            const shareButton = document.getElementById('shareButton');
+            shareButton.addEventListener('click', async () => {
+                try {
+                    if (!liff.isApiAvailable('shareTargetPicker')) {
+                        alert('您的 LINE 版本不支援此功能，請更新 LINE App。');
+                        return;
+                    }
+                    
+                    // 這是您要分享出去的 Flex Message。
+                    // 注意：分享出去的名片，不應該再包含「分享」按鈕，所以 footer 內容跟 server.js 的版本不同。
+                    const messageToSend = [{
+                        type: 'flex',
+                        altText: '這是一張電子名片',
+                        contents: {
+                          type: 'bubble',
+                          hero: { type: 'image', url: 'https://i.imgur.com/rS0FfWq.png', size: 'full', aspectRatio: '1:1', aspectMode: 'cover' },
+                          body: { type: 'box', layout: 'vertical', spacing: 'md', contents: [ { type: 'text', text: '您的名字', weight: 'bold', size: 'xl' }, { type: 'text', text: '您的職稱 | XXX 公司', color: '#aaaaaa', size: 'sm' } ] },
+                          footer: { type: 'box', layout: 'vertical', spacing: 'sm', contents: [ { type: 'button', style: 'link', action: { type: 'uri', label: '前往官方網站', uri: 'https://www.google.com' } } ] }
+                        }
+                    }];
+                    
+                    const result = await liff.shareTargetPicker(messageToSend);
+                    if (result) {
+                        liff.closeWindow();
+                    }
+                } catch (error) {
+                    console.error(error);
+                    alert('分享失敗：' + error.message);
+                }
+            });
         }
-      });
-    }
-
-    main();
-  </script>
+        main();
+    </script>
 </body>
 </html>
