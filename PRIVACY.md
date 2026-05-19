@@ -18,4 +18,4 @@ All image assets used by the extension are stored locally inside the extension p
 This extension is not affiliated with YouTube, Google, or any third-party creator.
 
 Contact:
-your-email@example.com
+zxcasd89525@gmail.com
