@@ -1,10 +1,10 @@
-Privacy Policy for Friendify YouTube
+Privacy Policy for PoYunify Thumbnail Reaction Overlay
 
-Friendify YouTube does not collect, store, sell, share, or transmit any personal data.
+PoYunify Thumbnail Reaction Overlay does not collect, store, sell, share, or transmit any personal data.
 
-The extension only modifies the visual appearance of YouTube thumbnails locally in the user's browser. It overlays local reaction image assets on YouTube thumbnail elements.
+The extension only modifies the visual appearance of YouTube video thumbnails locally in the user's browser. It overlays local reaction image assets on YouTube thumbnail elements.
 
-Friendify YouTube does not collect or transmit:
+PoYunify Thumbnail Reaction Overlay does not collect or transmit:
 - YouTube account information
 - browsing history
 - watch history
@@ -15,7 +15,7 @@ Friendify YouTube does not collect or transmit:
 
 All image assets used by the extension are stored locally inside the extension package.
 
-This extension is not affiliated with YouTube, Google, or any third-party creator.
+This extension is not affiliated with YouTube or Google.
 
 Contact:
 zxcasd89525@gmail.com
